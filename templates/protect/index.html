@@ -1,0 +1,13 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+<form action="http://127.0.0.1:8000/accounts/login/">
+    <input type="submit" value="Go down the rabbit hole" />
+</form>
+
+{% if is_not_author %}
+<form action="http://127.0.0.1:8000/news/upgrade">
+    <input type="submit" value="Стать автором" />
+</form>
+{% endif %}
+{% endblock content %}
