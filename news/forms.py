@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Post
+from .models import Post, CategorySubscribers
 
 
 class NewsForm(forms.ModelForm):
@@ -9,6 +9,7 @@ class NewsForm(forms.ModelForm):
         fields = [
             'post_header',
             'post_text',
+            'post_category',
             'author_name',
         ]
 
@@ -25,3 +26,12 @@ class NewsForm(forms.ModelForm):
                 "Описание не должно быть идентично названию."
             )
         return cleaned_data
+
+
+class SubscribeForm(forms.ModelForm):
+    class Meta:
+        model = CategorySubscribers
+        fields = [
+            'category',
+            'subscriber'
+        ]

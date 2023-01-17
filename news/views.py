@@ -1,13 +1,31 @@
+import os
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView)
-from .models import Post
-from .filters import NewsFilter
-from .forms import NewsForm
+from .models import Post, CategorySubscribers
+from .forms import NewsForm, SubscribeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect
+from django.core.mail import send_mail
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .filters import NewsFilter
+from dotenv import load_dotenv, find_dotenv
+from django.contrib.auth.models import User
+
+load_dotenv(find_dotenv())
+
+
+@receiver(post_save, sender=Post)
+def notify_category_subscribers(sender, instance, created=True, **kwargs):
+    send_mail(
+        subject="You have new posts in subscriptions",
+        message=Post.post_text[:50],
+        from_email=os.environ.get('EMAIL')+'yandex.ru',
+        recipient_list=User.email
+    )
 
 
 class NewsList(ListView):
@@ -62,6 +80,12 @@ class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         news = form.save(commit=False)
         news.post_type = 'NW'
         return super().form_valid(form)
+
+
+class NewsSubscribe(CreateView):
+    form_class = SubscribeForm
+    model = CategorySubscribers
+    template_name = 'subscribe.html'
 
 
 class NewsUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

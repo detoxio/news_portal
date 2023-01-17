@@ -1,15 +1,14 @@
 {% extends 'flatpages/default.html' %}
 
 {% load custom_filters %}
-
-{% block title %}
+{% csrf_token %}
+{% block head_title %}
 News
+{% endblock head_title %}
+{% block title %}
 {% endblock title %}
 
 {% block content %}
-<form action="http://127.0.0.1:8000/accounts/logout/">
-    <input type="submit" value="Log out" />
-</form>
 <style>
 table, th, td {
   border: 1px solid black;

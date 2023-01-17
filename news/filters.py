@@ -8,11 +8,12 @@ class NewsFilter(FilterSet):
     post_date = django_filters.DateFilter(
         lookup_expr='gt',
         label='Не раньше, чем',
-        widget=DateInput(attrs={'type': 'date'}))
+        widget=DateInput(attrs={'type': 'date'})
+    )
 
     class Meta:
         model = Post
         fields = {
             'post_header': ['icontains'],
-            'post_text': ['icontains'],
+            'post_text': ['icontains']
             }
