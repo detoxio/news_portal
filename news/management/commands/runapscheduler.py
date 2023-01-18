@@ -22,7 +22,7 @@ def my_job():
         'NEWS',
         'Подборка новых статей за неделю',
         from_email=os.environ.get('EMAIL')+'yandex.ru',
-        recipient_list=User.email,
+        recipient_list=[email_address.user.email]
     )
 
 

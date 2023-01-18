@@ -1,59 +1,75 @@
+from django.shortcuts import render
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse
+from django.contrib.auth.forms import UserCreationForm
+from django import forms
 
-article = "AR"
-news = "NW"
 
-POST_TYPES = [
-    (article, "Статья"),
-    (news, "Новость")
-]
+
+class Status(models.TextChoices):
+    POST = 'PO', 'Post'
+    NEWS = 'NE', 'News'
 
 
 class Author(models.Model):
-    user_name = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_rating = models.IntegerField(default=0)
+    author_user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user_rate = models.IntegerField(default=0)
 
     def update_rating(self):
-        self.user_rating = 0
-        for post in Post.objects.filter(author_name=self):
-            self.user_rating += post.post_rating * 3
-            for comment in Comment.objects.filter(comment_post=post):
-                self.user_rating += comment.comment_rating
-        for comment in Comment.objects.filter(comment_user=self.user_name):
-            self.user_rating += comment.comment_rating
+        self.user_rate = 0
+        self.total_com_rate = 0
+        self.total_post_rate = 0
+        self.total_comment = 0
+        for comment_iter in Comment.objects.filter(comment_aut=self.author_user):
+            self.total_com_rate = self.total_com_rate + comment_iter.comment_rate
+        for post_iter in Post.objects.filter(author_post=self.author_user_id):
+            self.total_post_rate = self.total_post_rate + post_iter.post_rate
+            for comment_iter in Comment.objects.filter(post_com=post_iter):
+                self.total_comment = self.total_comment + comment_iter.comment_rate
+        self.user_rate = (self.total_post_rate * 3) + self.total_com_rate + self.total_comment
         self.save()
+
+    def __str__(self):
+        return f'{self.author_user}'
 
 
 class Category(models.Model):
-    category_name = models.CharField(max_length=255, unique=True)
-    category_subscribers = models.ManyToManyField(User, through='CategorySubscribers')
+    name = models.CharField(max_length=255, unique=True)
+    subscribers = models.ManyToManyField(User, max_length=200, blank=True)
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 
 
 class Post(models.Model):
-    author_name = models.ForeignKey(Author, on_delete=models.CASCADE)
-    post_type = models.CharField(max_length=2, choices=POST_TYPES, default=news)
-    post_date = models.DateTimeField(auto_now_add=True)
-    post_category = models.ManyToManyField(Category, through="PostCategory")
-    post_header = models.CharField(max_length=90)
-    post_text = models.TextField()
-    post_rating = models.IntegerField(default=0)
+    author_post = models.ForeignKey(Author, on_delete=models.CASCADE)
+    status = models.CharField(max_length=2, choices=Status.choices, default=Status.POST)
+    time_create = models.DateTimeField(auto_now_add=True)
+    categories = models.ManyToManyField(Category, through='PostCategory')
+    headline = models.CharField(max_length=255)
+    content = models.TextField()
+    post_rate = models.IntegerField(default=0)
+
+    def like(self, amount=1):
+        self.post_rate += amount
+        self.save()
+
+    def dislike(self, amount=1):
+        self.post_rate -= amount
+        self.save()
 
     def preview(self):
-        self.post_text = self.post_text[0:125] + "..."
-        self.save()
+        self.content = self.content[0:125] + '...'
+        return f'Заголовок:{self.headline}, Текст: {self.content}'
 
-    def like(self, amount=0):
-        self.post_rating += amount
-        self.save()
-
-    def dislike(self, amount=0):
-        self.post_rating -= amount
-        self.save()
+    def __str__(self):
+        return f'{self.content}'
 
     def get_absolute_url(self):
-        return reverse('news_list')
+        return f'{self.id}'
+
 
 
 class PostCategory(models.Model):
@@ -61,25 +77,32 @@ class PostCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
-class CategorySubscribers(models.Model):
-    subscriber = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    def get_absolute_url(self):
-        return reverse('news_list')
-
-
 class Comment(models.Model):
-    comment_post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    comment_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment_text = models.TextField(max_length=255)
-    comment_time = models.DateTimeField(auto_now_add=True)
-    comment_rating = models.IntegerField(default=0)
+    post_com = models.ForeignKey(Post, on_delete=models.CASCADE)
+    comment_aut = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    time_create = models.DateTimeField(auto_now_add=True)
+    comment_rate = models.IntegerField(default=0)
 
-    def like(self, amount=0):
-        self.comment_rating += amount
+    def like(self, amount=1):
+        self.comment_rate += amount
         self.save()
 
-    def dislike(self, amount=0):
-        self.comment_rating -= amount
+    def dislike(self, amount=1):
+        self.comment_rate -= amount
         self.save()
+
+
+class BaseRegisterForm(UserCreationForm):
+    email = forms.EmailField(label="Email")
+    first_name = forms.CharField(label="Имя")
+    last_name = forms.CharField(label="Фамилия")
+
+    class Meta:
+        model = User
+        fields = ("username",
+                  "first_name",
+                  "last_name",
+                  "email",
+                  "password1",
+                  "password2",)

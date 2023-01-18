@@ -1,135 +1,96 @@
-import os
+from django.shortcuts import render, HttpResponseRedirect, redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
+from .models import Post, Author, Category, PostCategory, User
+from .filters import PostFilter, CategoryFilter
+from datetime import datetime, timedelta
+from .forms import PostForm, CategoryForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import (
-    ListView, DetailView, CreateView, UpdateView, DeleteView)
-from .models import Post, CategorySubscribers
-from .forms import NewsForm, SubscribeForm
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
-from django.shortcuts import redirect
-from django.core.mail import send_mail
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from .filters import NewsFilter
-from dotenv import load_dotenv, find_dotenv
-from django.contrib.auth.models import User
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponse
 
-load_dotenv(find_dotenv())
+from celery.utils.log import get_logger
+
+logger = get_logger(__name__)
 
 
-@receiver(post_save, sender=Post)
-def notify_category_subscribers(sender, instance, created=True, **kwargs):
-    send_mail(
-        subject="You have new posts in subscriptions",
-        message=Post.post_text[:50],
-        from_email=os.environ.get('EMAIL')+'yandex.ru',
-        recipient_list=User.email
-    )
+# Create your views here.
 
 
-class NewsList(ListView):
-    queryset = Post.objects.all().order_by().values()
-    ordering = 'post_date'
+class PostList(ListView):
+    queryset = Post.objects.all().order_by('-time_create')
     template_name = 'news.html'
-    context_object_name = 'news'
-    paginate_by = 10
+    context_object_name = 'posts'
+    paginate_by = 4
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        self.filterset = NewsFilter(self.request.GET, queryset)
+        self.filterset = PostFilter(self.request.GET, queryset)
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['time_now'] = datetime.utcnow()
+        context['value1'] = None
+        context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
+        context['categories'] = Category.objects.all()
+        context['authors'] = Author.objects.all()
+        context['form'] = PostForm()
         context['filterset'] = self.filterset
         return context
 
 
-class NewsSearch(ListView):
-    queryset = Post.objects.all().order_by().values()
-    ordering = 'post_date'
-    template_name = 'news_search.html'
-    context_object_name = 'news'
-    paginate_by = 10
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        self.filterset = NewsFilter(self.request.GET, queryset)
-        return self.filterset.qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['filterset'] = self.filterset
-        return context
 
 
-class NewsDetails(DetailView):
+class PostDetail(DetailView):
     model = Post
-    template_name = 'post.html'
-    context_object_name = 'post'
+    template_name = 'news_detail.html'
+    context_object_name = 'post_detail'
 
 
-class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = ('news.add_post')
-    form_class = NewsForm
-    model = Post
-    template_name = 'news_edit.html'
-
-    def form_valid(self, form):
-        news = form.save(commit=False)
-        news.post_type = 'NW'
-        return super().form_valid(form)
-
-
-class NewsSubscribe(CreateView):
-    form_class = SubscribeForm
-    model = CategorySubscribers
-    template_name = 'subscribe.html'
-
-
-class NewsUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = ('news.update_post')
-    form_class = NewsForm
+class PostUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_edit')
+    form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
 
 
-class NewsDelete(DeleteView):
+class PostDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news_delete')
     model = Post
     template_name = 'news_delete.html'
-    success_url = reverse_lazy('news_list')
+    success_url = reverse_lazy('posts')
 
 
-class ArticleCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
-    permission_required = ('news.add_post')
-    form_class = NewsForm
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_edit')
+    form_class = PostForm
     model = Post
-    template_name = 'article_edit.html'
-
-    def form_valid(self, form):
-        article = form.save(commit=False)
-        article.post_type = 'AR'
-        return super().form_valid(form)
+    template_name = 'news_edit.html'
 
 
-class ArticleUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
-    permission_required = ('news.update_post')
-    form_class = NewsForm
-    model = Post
-    template_name = 'article_edit.html'
+class Subscribe(LoginRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'subscribe.html'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = CategoryFilter(self.request.GET, queryset)
+        return self.filterset.qs
 
-class ArticleDelete(DeleteView):
-    model = Post
-    template_name = 'article_delete.html'
-    success_url = reverse_lazy('news_list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = CategoryFilter(self.request.GET, queryset=self.get_queryset())
+        context['name'] = Category.objects.all()
+        context['form'] = CategoryForm()
+        context['filterset'] = self.filterset
 
+        return context
 
-@login_required
-def upgrade_me(request):
-    user = request.user
-    premium_group = Group.objects.get(name='authors')
-    if not request.user.groups.filter(name='authors').exists():
-        premium_group.user_set.add(user)
-    return redirect('/')
+    def post(self, request, **kwargs):
+        subscriber = request.user
+        category = Category.objects.get(pk=request.POST['name'])
+        category.subscribers.add(subscriber)
+        return redirect('/accounts/profile/')
