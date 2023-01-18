@@ -1,5 +1,5 @@
 {% extends 'account/base.html' %}
-
+{% csrf_token %}
 {% block content %}
 <form action="http://127.0.0.1:8000/accounts/login/">
     <input type="submit" value="Go down the rabbit hole" />

@@ -1,7 +1,7 @@
 {% extends 'flatpages/default.html' %}
 
 {% load custom_filters %}
-
+{% csrf_token %}
 {% block title %}
 News
 {% endblock title %}
@@ -18,7 +18,6 @@ table.center {
   margin-right: auto;
 }
 </style>
-
   <h1>Поиск новостей:</h1>
     <form action="" method="get">
         {{ filterset.form.as_p }}

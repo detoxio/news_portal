@@ -1,5 +1,5 @@
 {% extends 'flatpages/default.html' %}
-
+{% csrf_token %}
 {% load custom_filters %}
 
 {% block content %}
@@ -12,3 +12,4 @@
 
     <input type="submit" value="Delete" />
 </form>
+{% endblock content %}
