@@ -1,48 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
 
-        <title>{% block head_title %}{% endblock head_title %}</title>
-        {% load static %}
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-    </head>
-    <body>
-        <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/news">Home</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/news/create">Create news</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/articles/create">Create article</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/news/search">Search</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/news/subscribe">Subscribe</a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="/accounts/logout">Log out</a></li>
-                </ul>
 
-                <a class="navbar-brand" href="/news/"></a>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                          </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Page content-->
-        <div class="container">
-        <div class="row">
-        <div class="col-lg-14 text-center">
-            {% block body %}
-            {% block content %}
-            {% endblock content %}
-            {% endblock body %}
-            {% block extra_body %}
-            {% endblock extra_body %}
-    </body>
+<div class="intro">
+    <div class="container">
+        <div class="intro__iner">
+            <a class="button" href="/news/subscribe/">Оформить подписку</a>
+        </div>
+    </div>
+</div>
+
+<header class="header">
+    <div class="container">
+        <div class="header__iner">
+            <div class="header__logo">Новостной портал</div>
+
+            <nav class="nav">
+                <a class="nav__link" href="/news/">Новости</a>
+                <a class="nav__link" href="/about/">О нас</a>
+                <a class="nav__link" href="/contacts/">Контакты</a>
+                <a class="nav__link" href="/accounts/profile/">Профиль</a>
+            </nav>
+
+        </div>
+    </div>
+</header>
+
+
+</body>
 </html>
+
+<!-- Page content-->
+<div class="container">
+    <div class="row">
+           {% block content %}
+           {{ flatpage.content }}
+           {% endblock content %}
+   </div>
+</div>

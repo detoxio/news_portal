@@ -1,60 +1,69 @@
 {% extends 'flatpages/default.html' %}
-
-{% load custom_filters %}
-{% csrf_token %}
-{% block head_title %}
-News
-{% endblock head_title %}
-{% block title %}
-{% endblock title %}
-
 {% block content %}
-<style>
-table, th, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
+{% load custom_filters %}
+{% load custom_tags %}
+<body>
+<div class="name">
+    <h3>Все новости</h3>
+    <div class="finder"
+        <h5>Поиск</h5>
 
-  <h1>Количество новостей: {{news|length}}</h1>
+        <form action="" method="get">
+            {{ filterset.form.as_p }}
+            <input type="submit" value="Найти" />
+        </form>
+
+    </div>
     <hr>
-    {% if news %}
-        <table class="center">
-            <tr>
-                <td><strong>Заголовок</strong></td>
-                <td><strong>Дата публикации</strong></td>
-                <td><strong>Описание</strong></td>
-            </tr>
-            {% for post in news %}
-            <tr>
-                <td> {{post.post_header|censor}}</td>
-                <td> {{post.post_date}}</td>
-                <td> {{post.post_text|truncatechars:20}}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <h2>Новостей нет!</h2>
+
+</div>
+
+
+
+
+{% if posts %}
+    {% for post in posts%}
+        <div class="post-wrap">
+            <div class="post-item">
+                <div class="post-item-wrap">
+                    <a href="/news/{{post.get_absolute_url}}" class="post-link">
+                        <h3 class="post-title">{{ post.headline|Censor }}</h3>
+                        <p class="post-content">{{ post.content|truncatewords:20|Censor }}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <h2>Новостей нет!</h2>
+{% endif %}
+
+<div class="paginator">
+    {% if page_obj.has_previous %}
+        <a href="?{% url_replace page=1 %}">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
     {% endif %}
-     {% if page_obj.has_previous %}
-       <a href="?page=1">1</a>
-       {% if page_obj.previous_page_number != 1 %}
-           ...
-           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-       {% endif %}
-   {% endif %}
+
 
     {{ page_obj.number }}
 
+
     {% if page_obj.has_next %}
-       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}
-   {% endif %}
-    {% endblock content %}
+    <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+        <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
+    <hr>
+</div>
+
+
+
+
+</body>
+
+{% endblock content %}
