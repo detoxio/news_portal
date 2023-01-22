@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="738b9380-e7a1-49b9-8dd0-e46d442315c4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/article_urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/filters.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templatetags/custom_filters.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/views.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fpages/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../gazeta/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/article_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/article_edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/flatpages/about.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/flatpages/default.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/flatpages/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/news.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/news_delete.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/news_edit.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/news_search.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../templates/post.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/bumaga/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/../gazeta/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/gazeta/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/templatetags/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/gazeta/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gazeta/asgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/gazeta/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gazeta/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/gazeta/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gazeta/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/gazeta/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/../gazeta/wsgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gazeta/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/../manage.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2KE5EgAvpOkSQxysqKgLWcSy9F7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/Асус/PycharmProjects/AAA_Новостной сайт/news_portal"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="738b9380-e7a1-49b9-8dd0-e46d442315c4" name="Changes" comment="" />
+      <created>1673526795927</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1673526795927</updated>
+    </task>
+    <servers />
+  </component>
+</project>
