@@ -1,11 +1,12 @@
 {% extends 'flatpages/default.html' %}
-{% csrf_token %}
+
 {% block content %}
-<h1> Создать / редактировать статью </h1>
+<h1> Подписаться </h1>
 <hr>
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    {{ filterset.form.as_p }}
     <input type="submit" value="Save" />
 </form>
 {% endblock content %}
