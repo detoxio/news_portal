@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 style="color:rgba(255,111,0,0.69)">{% trans "Дайджест новостей за прошедшую неделю в категории" %} {{ category }}!</h1>
+<table>
+    {% for post in posts %}
+    <tr>
+        <td>
+            <a href="http://localhost:8000/news/{{ post.id }}">{{ post.headline }}</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+</html>
